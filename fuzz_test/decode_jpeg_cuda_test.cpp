@@ -17,7 +17,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     auto data = torch::empty({static_cast<long>(Size)}, torch::kU8);
     memcpy(data.data_ptr<uint8_t>(), Data, Size);
     auto img = vision::image::decode_jpeg_cuda(
-        data, vision::image::IMAGE_READ_MODE_RGB, 0);
+        data, vision::image::IMAGE_READ_MODE_RGB, c10::Device(c10::DeviceType::CUDA,0));
 
   } catch (...) {
   }
