@@ -11,13 +11,20 @@
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   try {
-    if (Size == 0) {
+    if (Size <= 2) {
       return 0;
     }
-    auto data = torch::empty({static_cast<long>(Size)}, torch::kU8);
-    memcpy(data.data_ptr<uint8_t>(), Data, Size);
+
+    std::vector<torch::ScalarType> dtypes{torch::kU8,  torch::kI8,  torch::kI16,
+                                          torch::kI32, torch::kI64, torch::kF16,
+                                          torch::kF32};
+    auto data = torch::empty({static_cast<long>(Size - 2)},
+                             dtypes[Data[0] % dtypes.size()]);
+    memcpy(data.data_ptr<uint8_t>(), Data + 2, Size - 2);
     auto img = vision::image::decode_jpeg_cuda(
-        data, vision::image::IMAGE_READ_MODE_RGB, c10::Device(c10::DeviceType::CUDA,0));
+        data, static_cast<vision::image::ImageReadMode>(Data[1]),
+
+        c10::Device(c10::DeviceType::CUDA, 0));
 
   } catch (...) {
   }
