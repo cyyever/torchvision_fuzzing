@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(CyyNaiveLib LANGUAGES CXX)
+project(torchvision_fuzzing LANGUAGES CXX)
 include(cmake/all.cmake)
 
 find_package(Python3 REQUIRED)
@@ -22,7 +22,8 @@ find_package(TorchVision REQUIRED)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/fuzzing.cmake)
 
 find_package(doctest REQUIRED)
-file(GLOB fuzzing_sources ${CMAKE_CURRENT_SOURCE_DIR}/fuzz_test/*.cpp)
+# file(GLOB fuzzing_sources ${CMAKE_CURRENT_SOURCE_DIR}/fuzz_test/*.cpp)
+file(GLOB fuzzing_sources ${CMAKE_CURRENT_SOURCE_DIR}/fuzz_test/encode_jpeg_test.cpp)
 
 set(ENV{FUZZING_TIMEOUT} 10)
 set(ENV{MAX_FUZZING_TIME} 60)
